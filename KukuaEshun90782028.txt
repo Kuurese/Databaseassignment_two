@@ -1,0 +1,209 @@
+Name: Kukua Eshun
+ID: 90782028
+Cohort C
+
+
+MariaDB [(none)]> create database Project;
+Query OK, 1 row affected (0.005 sec)
+
+MariaDB [(none)]> use Project;
+Database changed
+
+MariaDB [Project]> create table Department(deptNo varchar(5) primary key,deptName varchar(25),mgrEmpNo varchar(5) unique);
+Query OK, 0 rows affected (0.051 sec)
+
+MariaDB [Project]> describe department;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| deptNo   | varchar(5)  | NO   | PRI | NULL    |       |
+| deptName | varchar(25) | YES  |     | NULL    |       |
+| mgrEmpNo | varchar(5)  | YES  | UNI | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.011 sec)
+
+
+MariaDB [Project]> insert into Department values 
+    -> ('D1','IT',NULL),
+    -> ('D2','HR',NULL),
+    -> ('D3','Finance',NULL),
+    -> ('D4','Marketing',NULL),
+    -> ('D5','Operations',NULL),
+    -> ('D6','Sales',NULL),
+    -> ('D7','R&D',NULL),
+    -> ('D8','Support',NULL),
+    -> ('D9','Logistics',NULL),
+    -> ('D10','Admin',NULL);
+Query OK, 10 rows affected (0.003 sec)
+
+
+
+MariaDB [Project]> create table Employee(empNo varchar(5) primary key,fName varchar(20),lName varchar(20),address varchar(30),DOB date,sex char(1),position varchar(15),deptNo varchar(5),foreign key(deptNo) references Department(deptNo),constraint chk_sex check(sex in ('M','F')),constraint chk_position check(position in ('Manager','Team Leader','Analyst','Software Developer'))); 
+Query OK, 0 rows affected (0.038 sec)
+
+MariaDB [Project]> describe employee;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| empNo    | varchar(5)  | NO   | PRI | NULL    |       |
+| fName    | varchar(20) | YES  |     | NULL    |       |
+| lName    | varchar(20) | YES  |     | NULL    |       |
+| address  | varchar(30) | YES  |     | NULL    |       |
+| DOB      | date        | YES  |     | NULL    |       |
+| sex      | char(1)     | YES  |     | NULL    |       |
+| position | varchar(30) | YES  |     | NULL    |       |
+| deptNo   | varchar(5)  | YES  | MUL | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+8 rows in set (0.004 sec)
+
+
+MariaDB [Project]> insert into Employee values 
+    -> ('E1','John','Doe','Accra','2001-05-10','M','Manager','D1'),
+    -> ('E2','Ama','Mensah','Tema','2000-03-12','F','Team Leader','D1'),
+    -> ('E3','Kofi','Boateng','Kumasi','1999-07-22','M','Analyst','D2'),
+    -> ('E4','Abena','Owusu','Cape Coast','2002-01-15','F','Software Developer','D2'),
+    -> ('E5','Yaw','Darko','Accra','1998-11-09','M','Analyst','D3'),
+    -> ('E6','Akosua','Bonsu','Takoradi','2001-09-30','F','Team Leader','D3'),
+    -> ('E7','Kojo','Mensah','Tamale','1997-06-18','M','Software Developer','D4'),
+    -> ('E8','Efua','Asare','Ho','2003-04-25','F','Manager','D4'),
+    -> ('E9','Kwame','Osei','Accra','1996-12-05','M','Analyst','D5'),
+    -> ('E10','Adjoa','Nkrumah','Koforidua','2000-08-14','F','Software Developer','D5');
+
+
+
+MariaDB [Project]> create table Project(projNo varchar(5) primary key,projName varchar(25),deptNo varchar(5),foreign key(deptNo) references Department(deptNo));
+Query OK, 0 rows affected (0.033 sec)
+
+MariaDB [Project]> describe project;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| projNo   | varchar(5)  | NO   | PRI | NULL    |       |
+| projName | varchar(25) | YES  |     | NULL    |       |
+| deptNo   | varchar(5)  | YES  | MUL | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.003 sec)
+
+
+MariaDB [Project]> insert into Project values 
+    -> ('P1','AI System','D1'),
+    -> ('P2','Payroll','D2'),
+    -> ('P3','Banking App','D3'),
+    -> ('P4','E-Commerce','D4'),
+    -> ('P5','Logistics Tracker','D5'),
+    -> ('P6','CRM System','D6'),
+    -> ('P7','Research Tool','D7'),
+    -> ('P8','Helpdesk','D8'),
+    -> ('P9','Fleet System','D9'),
+    -> ('P10','Admin Portal','D10');
+Query OK, 10 rows affected (0.001 sec)
+
+MariaDB [Project]> create table WorksOn(empNo varchar(5),projNo varchar(5),dateWorked date,hoursWorked int,primary key(empNo,projNo,dateWorked),foreign key(empNo) references Employee(empNo),foreign key(projNo) references Project(projNo),constraint chk_hours check(hoursWorked between 0 and 40));
+Query OK, 0 rows affected (0.030 sec)
+
+MariaDB [Project]>  describe workson;
++-------------+------------+------+-----+---------+-------+
+| Field       | Type       | Null | Key | Default | Extra |
++-------------+------------+------+-----+---------+-------+
+| empNo       | varchar(5) | NO   | PRI | NULL    |       |
+| projNo      | varchar(5) | NO   | PRI | NULL    |       |
+| dateWorked  | date       | NO   | PRI | NULL    |       |
+| hoursWorked | int(11)    | YES  |     | NULL    |       |
++-------------+------------+------+-----+---------+-------+
+4 rows in set (0.005 sec)
+
+
+MariaDB [Project]> insert into WorksOn values 
+    -> ('E1','P1','2026-06-01',5),
+    -> ('E2','P1','2026-06-01',6),
+    -> ('E3','P2','2026-06-02',7),
+    -> ('E4','P2','2026-06-02',8),
+    -> ('E5','P3','2026-06-03',4),
+    -> ('E6','P3','2026-06-03',6),
+    -> ('E7','P4','2026-06-04',5),
+    -> ('E8','P4','2026-06-04',3),
+    -> ('E9','P5','2026-06-05',6),
+    -> ('E10','P5','2026-06-05',7);
+Query OK, 10 rows affected (0.002 sec)
+
+
+
+MariaDB [Project]> create view FemaleProjects as select p.projNo,p.projName from Project p join Department d on p.deptNo=d.deptNo join Employee e on d.mgrEmpNo=e.empNo where e.sex='F' order by p.projNo;
+Query OK, 0 rows affected (0.030 sec)
+
+
+
+
+MariaDB [Project]> describe femaleprojects;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| projNo   | varchar(5)  | NO   |     | NULL    |       |
+| projName | varchar(25) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.009 sec)
+
+
+MariaDB [Project]> create view TableAttributes as select e.empNo, e.fName,e.lName,p.projName,w.hoursWorked from Employee as e join WorksOn as w on e.empNo=w.empNo join Project as p on w.projNo=p.projNo;
+Query OK, 0 rows affected (0.021 sec)
+
+
+MariaDB [Project]> create view EmpProject(empNo,projNo,totalHours) as select w.empNo,w.projNo,sum(w.hoursWorked) from WorksOn w group by w.empNo,w.projNo;
+Query OK, 0 rows affected (0.023 sec)
+
+MariaDB [Project]> select * from EmpProject;
++-------+--------+------------+
+| empNo | projNo | totalHours |
++-------+--------+------------+
+| E1    | P1     |          5 |
+| E10   | P5     |          7 |
+| E2    | P1     |          6 |
+| E3    | P2     |          7 |
+| E4    | P2     |          8 |
+| E5    | P3     |          4 |
+| E6    | P3     |          6 |
+| E7    | P4     |          5 |
+| E8    | P4     |          3 |
+| E9    | P5     |          6 |
++-------+--------+------------+
+10 rows in set (0.001 sec)
+
+MariaDB [case2]> SELECT projNo FROM EmpProject WHERE projNo = 'SCCS';
+Empty set (0.001 sec)
+
+MariaDB [Project]>  select count(projNo) from EmpProject where empNo='E1';
++---------------+
+| count(projNo) |
++---------------+
+|             1 |
++---------------+
+1 row in set (0.001 sec)
+
+MariaDB [Project]> select empNo,totalHours from EmpProject group by empNo;
++-------+------------+
+| empNo | totalHours |
++-------+------------+
+| E1    |          5 |
+| E10   |          7 |
+| E2    |          6 |
+| E3    |          7 |
+| E4    |          8 |
+| E5    |          4 |
+| E6    |          6 |
+| E7    |          5 |
+| E8    |          3 |
+| E9    |          6 |
++-------+------------+
+10 rows in set (0.001 sec)
+
+
+
+A materialized view stores its results physically instead of recomputing them each time it is queried. To keep the ExpensiveParts view consistent with the base Part table, it must be updated whenever changes are made to the Part table. This means that any insert, update, or delete on Part that affects the condition partcost > 1000 should trigger a corresponding update to the materialized view so that it always reflects the current state of the underlying data.
+
+
+
+
+
+
+
+
